@@ -1,0 +1,375 @@
+﻿[
+  {
+    "code": "SE",
+    "name": "Software Engineering",
+    "children": [
+      {
+        "code": "SE01",
+        "name": "Software Engineer"
+      },
+      {
+        "code": "SE02",
+        "name": "Backend Developer"
+      },
+      {
+        "code": "SE03",
+        "name": "Frontend Developer"
+      },
+      {
+        "code": "SE04",
+        "name": "Mobile Developer"
+      },
+      {
+        "code": "SE05",
+        "name": "Fullstack Developer"
+      },
+      {
+        "code": "SE06",
+        "name": "Blockchain Engineer"
+      }
+    ]
+  },
+  {
+    "code": "ST",
+    "name": "Software Testing",
+    "children": [
+      {
+        "code": "ST01",
+        "name": "Software Tester (Automation & Manual)"
+      },
+      {
+        "code": "ST02",
+        "name": "Automation Tester"
+      },
+      {
+        "code": "ST03",
+        "name": "Manual Tester"
+      },
+      {
+        "code": "ST04",
+        "name": "Game Tester"
+      },
+      {
+        "code": "ST05",
+        "name": "QA Engineer"
+      },
+      {
+        "code": "ST06",
+        "name": "Process Quality Assurance (PQA)"
+      }
+    ]
+  },
+  {
+    "code": "AI",
+    "name": "Artificial Intelligence (AI)",
+    "children": [
+      {
+        "code": "AI01",
+        "name": "AI Engineer"
+      },
+      {
+        "code": "AI02",
+        "name": "AI Researcher"
+      },
+      {
+        "code": "AI03",
+        "name": "Data Labeling (Gán nhãn dữ liệu)"
+      }
+    ]
+  },
+  {
+    "code": "DS",
+    "name": "Data Science",
+    "children": [
+      {
+        "code": "DS01",
+        "name": "Data Analyst"
+      },
+      {
+        "code": "DS02",
+        "name": "Data Engineer"
+      },
+      {
+        "code": "DS03",
+        "name": "Data Scientist"
+      }
+    ]
+  },
+  {
+    "code": "ITOPS",
+    "name": "IT Infrastructure and Operations",
+    "children": [
+      {
+        "code": "ITOPS01",
+        "name": "IT Helpdesk/IT support"
+      },
+      {
+        "code": "ITOPS02",
+        "name": "DevOps Engineer"
+      },
+      {
+        "code": "ITOPS03",
+        "name": "Network Engineer"
+      },
+      {
+        "code": "ITOPS04",
+        "name": "System Engineer"
+      },
+      {
+        "code": "ITOPS05",
+        "name": "System Administrator"
+      },
+      {
+        "code": "ITOPS06",
+        "name": "Database Administrator (DBA)"
+      },
+      {
+        "code": "ITOPS07",
+        "name": "Cloud Engineer"
+      },
+      {
+        "code": "ITOPS08",
+        "name": "Kỹ thuật IT"
+      }
+    ]
+  },
+  {
+    "code": "SEC",
+    "name": "Information Security",
+    "children": [
+      {
+        "code": "SEC01",
+        "name": "Chuyên viên Cyber Security"
+      },
+      {
+        "code": "SEC02",
+        "name": "Chuyên viên IT Security"
+      },
+      {
+        "code": "SEC03",
+        "name": "Chiến lược và phân tích bảo mật"
+      },
+      {
+        "code": "SEC04",
+        "name": "Quản trị và vận hành bảo mật"
+      },
+      {
+        "code": "SEC05",
+        "name": "Tuân thủ và kiểm toán bảo mật"
+      },
+      {
+        "code": "SEC06",
+        "name": "Phòng chống lừa đảo và an ninh mạng"
+      },
+      {
+        "code": "SEC07",
+        "name": "Bảo mật ứng dụng và phát triển"
+      },
+      {
+        "code": "SEC08",
+        "name": "Mã hóa và bảo mật dữ liệu"
+      },
+      {
+        "code": "SEC09",
+        "name": "Kiểm thử và đánh giá bảo mật"
+      }
+    ]
+  },
+  {
+    "code": "IOT",
+    "name": "IoT/Embedded Engineer",
+    "children": [
+      {
+        "code": "IOT01",
+        "name": "Kỹ sư IoT (IoT Engineer)"
+      },
+      {
+        "code": "IOT02",
+        "name": "Embedded Engineer/Lập trình nhúng"
+      }
+    ]
+  },
+  {
+    "code": "PM",
+    "name": "IT Project Management",
+    "children": [
+      {
+        "code": "PM01",
+        "name": "IT Project Manager"
+      },
+      {
+        "code": "PM02",
+        "name": "Scrum Master"
+      },
+      {
+        "code": "PM03",
+        "name": "Kỹ sư cầu nối BrSE"
+      },
+      {
+        "code": "PM04",
+        "name": "IT Comtor"
+      }
+    ]
+  },
+  {
+    "code": "MGMT",
+    "name": "IT Management/Specialist",
+    "children": [
+      {
+        "code": "MGMT01",
+        "name": "Software Architect"
+      },
+      {
+        "code": "MGMT02",
+        "name": "System Architect"
+      },
+      {
+        "code": "MGMT03",
+        "name": "Solution Architect"
+      },
+      {
+        "code": "MGMT04",
+        "name": "Technical Leader"
+      },
+      {
+        "code": "MGMT05",
+        "name": "Technical Manager"
+      },
+      {
+        "code": "MGMT06",
+        "name": "Head of Engineering"
+      },
+      {
+        "code": "MGMT07",
+        "name": "Technical Director"
+      },
+      {
+        "code": "MGMT08",
+        "name": "Chief Technology Officer (CTO)"
+      },
+      {
+        "code": "MGMT09",
+        "name": "Chief Information Officer (CIO)"
+      }
+    ]
+  },
+  {
+    "code": "DES",
+    "name": "Software Design",
+    "children": [
+      {
+        "code": "DES01",
+        "name": "UI/UX Design"
+      },
+      {
+        "code": "DES02",
+        "name": "Thiết kế đồ họa (Graphic Design)"
+      },
+      {
+        "code": "DES03",
+        "name": "Illustration"
+      },
+      {
+        "code": "DES04",
+        "name": "Animation Design"
+      },
+      {
+        "code": "DES05",
+        "name": "Interaction Designer"
+      },
+      {
+        "code": "DES06",
+        "name": "3D Modeler"
+      }
+    ]
+  },
+  {
+    "code": "PRD",
+    "name": "Product Management",
+    "children": [
+      {
+        "code": "PRD01",
+        "name": "Product Owner/Product Manager"
+      },
+      {
+        "code": "PRD02",
+        "name": "Business Analyst (Phân tích nghiệp vụ)"
+      },
+      {
+        "code": "PRD03",
+        "name": "Product Analyst/Research"
+      }
+    ]
+  },
+  {
+    "code": "GAME",
+    "name": "Game Development",
+    "children": [
+      {
+        "code": "GAME01",
+        "name": "Game Developer"
+      },
+      {
+        "code": "GAME02",
+        "name": "Concept Artist"
+      },
+      {
+        "code": "GAME03",
+        "name": "Game Design"
+      },
+      {
+        "code": "GAME04",
+        "name": "AR/VR Developer"
+      },
+      {
+        "code": "GAME05",
+        "name": "Vị trí Game Development khác"
+      }
+    ]
+  },
+  {
+    "code": "SALE",
+    "name": "Sales IT Phần mềm",
+    "children": [
+      {
+        "code": "SALE01",
+        "name": "Kinh doanh phần mềm"
+      },
+      {
+        "code": "SALE02",
+        "name": "Kinh doanh Domain/Hosting/Server"
+      },
+      {
+        "code": "SALE03",
+        "name": "Sales IT Phần mềm khác"
+      }
+    ]
+  },
+  {
+    "code": "ITOTHER",
+    "name": "Công nghệ thông tin khác",
+    "children": [
+      {
+        "code": "ITOTHER01",
+        "name": "IT Consultant"
+      },
+      {
+        "code": "ITOTHER02",
+        "name": "GIS Engineer"
+      },
+      {
+        "code": "ITOTHER03",
+        "name": "BIM Engineer"
+      },
+      {
+        "code": "ITOTHER04",
+        "name": "Bán hàng kỹ thuật IT"
+      },
+      {
+        "code": "ITOTHER05",
+        "name": "Chuyên môn Công nghệ thông tin khác"
+      }
+    ]
+  }
+]
+  

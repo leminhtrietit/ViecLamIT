@@ -1,0 +1,89 @@
+﻿@model IEnumerable<ViecLamIT.Domain.Entities.JobPosting>
+
+<div class="table-responsive mt-3">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Chức danh</th>
+                <th>Trạng thái</th>
+                @if (Model.Any() && (Model.First().Status == "Active" || Model.First().Status == "Paused"))
+                {
+                    <th>Ứng viên</th>
+                }
+                <th>Hành động</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Any())
+            {
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.Title</td>
+                        <td>
+                            @if (item.Status == "Active")
+                            {
+                                <span class="badge bg-success">Đang hiển thị</span>
+                            }
+                            else if (item.Status == "Paused")
+                            {
+
+                                <span class="badge bg-secondary">Đã ẩn</span>
+                            }
+                            else if (item.Status == "Pending")
+                            {
+
+                                <span class="badge bg-warning text-dark">Chờ duyệt</span>
+                            }
+                            else if (item.Status == "Rejected")
+                            {
+
+                                <span class="badge bg-danger">Bị từ chối</span>
+                            }
+                        </td>
+
+                        @if (item.Status == "Active" || item.Status == "Paused")
+                        {
+                            <td>
+                                <span class="badge bg-info text-dark">@item.JobApplications.Count() Nộp đơn</span>
+                            </td>
+                        }
+
+                        <td>
+                            <a asp-controller="JobPostings" asp-action="Details" asp-route-id="@item.Id" class="btn btn-outline-secondary btn-sm" target="_blank">Xem tin</a>
+                            @if (item.Status == "Active")
+                            {
+                                <a asp-action="ViewApplicants" asp-route-id="@item.Id" class="btn btn-info btn-sm">Xem CV</a>
+                                <a asp-controller="JobPostings" asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning btn-sm">Sửa</a>
+                                <form asp-action="ToggleStatus" method="post" class="d-inline">
+                                    <input type="hidden" name="id" value="@item.Id" />
+                                    <button type="submit" class="btn btn-secondary btn-sm">Ẩn tin</button>
+                                </form>
+                            }
+                            else if (item.Status == "Paused")
+                            {
+                                <a asp-controller="JobPostings" asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning btn-sm">Sửa</a>
+                                <form asp-action="ToggleStatus" method="post" class="d-inline">
+                                    <input type="hidden" name="id" value="@item.Id" />
+                                    <button type="submit" class="btn btn-success btn-sm">Đăng lại</button>
+                                </form>
+                            }
+                            else if (item.Status == "Pending")
+                            {
+                                <span class="text-muted">Không có hành động</span>
+                            }
+                            else if (item.Status == "Rejected")
+                            {
+                                <button type="button" class="btn btn-danger btn-sm view-reason-btn" data-reason="@item.AdminComment">Xem lý do</button>
+                            }
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr><td colspan="4" class="text-center">Không có tin nào.</td></tr>
+            }
+        </tbody>
+    </table>
+</div>

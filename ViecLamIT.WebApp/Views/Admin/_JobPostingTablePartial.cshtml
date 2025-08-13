@@ -1,0 +1,77 @@
+﻿@model IEnumerable<ViecLamIT.Domain.Entities.JobPosting>
+
+<div class="table-responsive mt-3">
+    <table class="table table-bordered table-striped">
+        <thead class="thead-dark">
+            <tr>
+                <th>Chức danh</th>
+                <th>Công ty</th>
+                <th>Ngày đăng</th>
+                <th>Trạng thái</th>
+                <th>Hành động</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Any())
+            {
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.Title</td>
+                        <td>@item.Company.Name</td>
+                        <td>@item.CreatedDate.ToString("dd/MM/yyyy")</td>
+                        <td>
+                            @if (item.Status == "Active")
+                            {
+                                <span class="badge bg-success">Đã duyệt</span>
+                            }
+                            else if (item.Status == "Paused")
+                            {
+
+                                <span class="badge bg-secondary">Tạm ẩn</span>
+                            }
+                            else if (item.Status == "Rejected")
+                            {
+
+                                <span class="badge bg-danger" title="@item.AdminComment">Bị từ chối</span>
+                            }
+                            else
+                            {
+
+                                <span class="badge bg-warning text-dark">Chờ duyệt</span>
+                            }
+                        </td>
+                        <td>
+                            @* --- BẮT ĐẦU SỬA LỖI LOGIC --- *@
+                            @if (item.Status == "Pending")
+                            {
+                                @* Nút "Xem & Duyệt" cho các tin đang chờ, có data-mode="review" *@
+                                <button type="button" class="btn btn-info btn-sm view-details-btn"
+                                        data-bs-toggle="modal" data-bs-target="#jobDetailModal"
+                                        data-id="@item.Id" data-mode="review">
+                                    Xem & Duyệt
+                                </button>
+                            }
+                            else
+                            {
+                                @* Nút "Xem" cho các trạng thái khác, có data-mode="view-only" *@
+                                <button type="button" class="btn btn-outline-secondary btn-sm view-details-btn"
+                                        data-bs-toggle="modal" data-bs-target="#jobDetailModal"
+                                        data-id="@item.Id" data-mode="view-only">
+                                    Xem
+                                </button>
+                            }
+                            @* --- KẾT THÚC SỬA LỖI LOGIC --- *@
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="5" class="text-center">Không có tin nào trong mục này.</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

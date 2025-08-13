@@ -1,0 +1,58 @@
+﻿@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+}
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+}
+@model IEnumerable<ViecLamIT.Domain.Entities.ApplicationUser>
+
+@{
+    ViewData["Title"] = "Quản Lý Người Dùng";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Họ và Tên</th>
+            <th>Email</th>
+            <th>Loại tài khoản</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model)
+        {
+            <tr>
+                <td>@(user.FirstName + " " + user.LastName)</td>
+                <td>@user.Email</td>
+                <td>
+                    @if (user.UserType == "Admin")
+                    {
+                        <span class="badge bg-danger">@user.UserType</span>
+                    }
+                    else if (user.UserType == "Employer")
+                    {
+                        <span class="badge bg-success">@user.UserType</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-info">@user.UserType</span>
+                    }
+                </td>
+                <td>
+                    <a asp-action="EditUser" asp-route-id="@user.Id" class="btn btn-warning btn-sm">Sửa</a>      
+                    <a asp-action="Delete" asp-route-id="@user.Id" class="btn btn-danger btn-sm">Xóa</a>
+                    <form asp-action="ResetPassword" method="post" class="d-inline" onsubmit="return confirm('Bạn có chắc chắn muốn đặt lại mật khẩu cho người dùng @user.Email không? Mật khẩu mặc định sẽ là Qa@12345.');">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="id" value="@user.Id" />
+                        <button type="submit" class="btn btn-secondary btn-sm">Reset Pass</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

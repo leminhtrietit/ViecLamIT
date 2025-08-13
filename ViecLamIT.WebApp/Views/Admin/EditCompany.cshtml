@@ -1,0 +1,202 @@
+﻿@model ViecLamIT.Domain.Entities.Company
+
+@{
+    ViewData["Title"] = "Chỉnh Sửa Thông Tin Công Ty";
+}
+
+<h1>@ViewData["Title"]</h1>
+<h4>@Model.Name</h4>
+<hr />
+<div class="row">
+    <div class="col-md-8">
+        <form asp-action="EditCompany">
+            @* Các trường ẩn để duy trì trạng thái *@
+            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="EmployerId" />
+            <input type="hidden" asp-for="IsVerified" />
+            <input type="hidden" asp-for="VerificationStatus" />
+            <input type="hidden" asp-for="LogoUrl" />
+
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            @* --- BẮT ĐẦU BỔ SUNG LẠI CÁC TRƯỜNG THÔNG TIN --- *@
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label asp-for="Name" class="control-label"></label>
+                        <input asp-for="Name" class="form-control" />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label asp-for="TaxCode" class="control-label"></label>
+                        <input asp-for="TaxCode" class="form-control" />
+                        <span asp-validation-for="TaxCode" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label asp-for="Website" class="control-label"></label>
+                        <input asp-for="Website" class="form-control" />
+                        <span asp-validation-for="Website" class="text-danger"></span>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label asp-for="CompanySize" class="control-label"></label>
+                        <input asp-for="CompanySize" class="form-control" />
+                        <span asp-validation-for="CompanySize" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label asp-for="BusinessType" class="control-label"></label>
+                        <input asp-for="BusinessType" class="form-control" />
+                        <span asp-validation-for="BusinessType" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            @* --- KẾT THÚC BỔ SUNG --- *@
+
+            @* --- KHU VỰC ĐỊA CHỈ 2 CẤP --- *@
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label asp-for="Province" class="control-label"></label>
+                        <select asp-for="Province" class="form-select" id="provinceSelect">
+                            <option value="">-- Chọn Tỉnh/Thành --</option>
+                        </select>
+                        <span asp-validation-for="Province" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label asp-for="Ward" class="control-label"></label>
+                        <select asp-for="Ward" class="form-select" id="wardSelect" disabled>
+                            <option value="">Vui lòng chọn Tỉnh/Thành</option>
+                        </select>
+                        <span asp-validation-for="Ward" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group mb-3">
+                <label asp-for="StreetAddress" class="control-label"></label>
+                <input asp-for="StreetAddress" class="form-control" placeholder="Số nhà, tên đường..." />
+                <span asp-validation-for="StreetAddress" class="text-danger"></span>
+            </div>
+            @* --- KẾT THÚC KHU VỰC ĐỊA CHỈ --- *@
+
+            <div class="form-group mb-3">
+                <label asp-for="Description" class="control-label"></label>
+                <textarea asp-for="Description" class="form-control" rows="5"></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Lưu" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="ManageCompanies">Quay lại danh sách</a>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async function() {
+            const provinceSelect = document.getElementById('provinceSelect');
+            const wardSelect = document.getElementById('wardSelect');
+
+            // Lấy giá trị đã được lưu từ Model
+            const currentProvince = "@Model.Province";
+            const currentWard = "@Model.Ward";
+
+            let provincesData = {};
+            let wardsData = {};
+
+            // Hàm tải danh sách phường/xã và chọn giá trị đã lưu
+            function loadWards(provinceCode) {
+                wardSelect.innerHTML = '<option value="">-- Chọn Phường/Xã --</option>';
+                wardSelect.disabled = true;
+
+                if (provinceCode) {
+                    const wardArray = Object.values(wardsData);
+                    const wards = wardArray
+                        .filter(ward => ward.parent_code === provinceCode)
+                        .sort((a, b) => a.name.localeCompare(b.name));
+
+                    wards.forEach(ward => {
+                        const option = new Option(ward.name_with_type, ward.name_with_type);
+                         // Nếu phường/xã này là phường/xã đã lưu, chọn nó
+                        if (ward.name_with_type === currentWard) {
+                            option.selected = true;
+                        }
+                        wardSelect.add(option);
+                    });
+                    wardSelect.disabled = false;
+                }
+            }
+
+            // Hàm chính để tải tất cả dữ liệu
+            async function initializeAddressData() {
+                try {
+                    const [provinceResponse, wardResponse] = await Promise.all([
+                        fetch('/data/province.json'),
+                        fetch('/data/ward.json')
+                    ]);
+
+                    provincesData = await provinceResponse.json();
+                    wardsData = await wardResponse.json();
+
+                    const provinceArray = Object.values(provincesData);
+
+                    // Đổ dữ liệu tỉnh và chọn giá trị đã lưu
+                    provinceSelect.innerHTML = '<option value="">-- Chọn Tỉnh/Thành --</option>';
+                    provinceArray.sort((a,b) => a.name.localeCompare(b.name)).forEach(province => {
+                        const option = new Option(province.name_with_type, province.name_with_type);
+                        option.setAttribute('data-code', province.code);
+                        if (province.name_with_type === currentProvince) {
+                            option.selected = true;
+                        }
+                        provinceSelect.add(option);
+                    });
+
+                    // Nếu đã có tỉnh được chọn sẵn, tải danh sách phường/xã tương ứng
+                    if (currentProvince) {
+                        const selectedProvinceObject = provinceArray.find(p => p.name_with_type === currentProvince);
+                        if (selectedProvinceObject) {
+                            loadWards(selectedProvinceObject.code);
+                        }
+                    }
+
+                } catch (error) {
+                    console.error("Lỗi khi tải hoặc xử lý file JSON:", error);
+                }
+            }
+
+            // Sự kiện khi người dùng thay đổi tỉnh
+            provinceSelect.addEventListener('change', function() {
+                const selectedOption = this.options[this.selectedIndex];
+                const provinceCode = selectedOption.getAttribute('data-code');
+                loadWards(provinceCode);
+            });
+
+            // Bắt đầu tải dữ liệu
+            await initializeAddressData();
+        });
+    </script>
+}

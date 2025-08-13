@@ -1,0 +1,47 @@
+﻿@model ViecLamIT.Domain.Entities.JobPosting
+
+@{
+    ViewData["Title"] = "Danh sách ứng viên cho vị trí: " + Model.Title;
+}
+
+<h1>@ViewData["Title"]</h1>
+<hr />
+
+@if (Model.JobApplications.Any())
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Tên ứng viên</th>
+                <th>Email</th>
+                <th>Ngày ứng tuyển</th>
+                <th>Trạng thái</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var application in Model.JobApplications)
+            {
+                <tr>
+                    <td>@(application.Applicant.FirstName + " " + application.Applicant.LastName)</td>
+                    <td>@application.Applicant.Email</td>
+                    <td>@application.ApplicationDate.ToString("dd/MM/yyyy HH:mm")</td>
+                    <td>
+                        <span class="badge bg-warning text-dark">@application.Status</span>
+                    </td>
+                    <td>
+                        <a asp-controller="Profile" asp-action="Details" asp-route-id="@application.ApplicantId" class="btn btn-secondary btn-sm" target="_blank">Xem CV</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <div class="alert alert-info">Chưa có ứng viên nào cho vị trí này.</div>
+}
+
+<div>
+    <a asp-action="Index">Quay lại danh sách</a>
+</div>

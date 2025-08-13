@@ -1,0 +1,63 @@
+﻿@model ViecLamIT.WebApp.ViewModels.CompanyDetailsAdminViewModel
+
+<!-- Nav tabs cho Modal -->
+<ul class="nav nav-tabs" id="modalTab" role="tablist">
+    <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="info-tab" data-bs-toggle="tab" data-bs-target="#info-pane" type="button" role="tab">Thông tin công ty</button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="activity-tab" data-bs-toggle="tab" data-bs-target="#activity-pane" type="button" role="tab">Hoạt động</button>
+    </li>
+</ul>
+
+<!-- Nội dung các tab -->
+<div class="tab-content" id="modalTabContent">
+    <!-- Tab 1: Thông tin công ty -->
+    <div class="tab-pane fade show active p-3" id="info-pane" role="tabpanel">
+        <dl class="row">
+            <dt class="col-sm-4">Tên công ty</dt>
+            <dd class="col-sm-8">@Model.Name</dd>
+
+            <dt class="col-sm-4">Địa chỉ</dt>
+            <dd class="col-sm-8">@Model.Address</dd>
+
+            <dt class="col-sm-4">Mã số thuế</dt>
+            <dd class="col-sm-8">@Model.TaxCode</dd>
+
+            <dt class="col-sm-4">Website</dt>
+            <dd class="col-sm-8"><a href="@Model.Website" target="_blank">@Model.Website</a></dd>
+
+            <hr class="my-2" />
+
+            <dt class="col-sm-4">Người đại diện</dt>
+            <dd class="col-sm-8">@Model.RepresentativeName</dd>
+
+            <dt class="col-sm-4">Email liên hệ</dt>
+            <dd class="col-sm-8">@Model.RepresentativeEmail</dd>
+
+            <dt class="col-sm-4">Số điện thoại</dt>
+            <dd class="col-sm-8">@Model.RepresentativePhone</dd>
+        </dl>
+    </div>
+
+    <!-- Tab 2: Hoạt động -->
+    <div class="tab-pane fade p-3" id="activity-pane" role="tabpanel">
+        <div class="row">
+            <div class="col-md-6">
+                <h6>Thống kê tin đăng</h6>
+                <ul class="list-group">
+                    <li class="list-group-item d-flex justify-content-between align-items-center">Tổng số tin: <span class="badge bg-primary rounded-pill">@Model.TotalJobs</span></li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">Đã duyệt: <span class="badge bg-success rounded-pill">@Model.ApprovedJobs</span></li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">Chờ duyệt: <span class="badge bg-warning text-dark rounded-pill">@Model.PendingJobs</span></li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">Đã từ chối: <span class="badge bg-danger rounded-pill">@Model.RejectedJobs</span></li>
+                </ul>
+            </div>
+            <div class="col-md-6">
+                <h6>Thống kê ứng viên</h6>
+                <ul class="list-group">
+                    <li class="list-group-item d-flex justify-content-between align-items-center">Tổng lượt ứng tuyển: <span class="badge bg-primary rounded-pill">@Model.TotalApplications</span></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

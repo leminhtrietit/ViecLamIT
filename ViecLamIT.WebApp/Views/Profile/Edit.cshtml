@@ -1,0 +1,110 @@
+﻿@model ViecLamIT.Domain.Entities.Profile
+
+@{
+    ViewData["Title"] = "Chỉnh Sửa Hồ Sơ Cá Nhân";
+}
+
+<h1>@ViewData["Title"]</h1>
+<hr />
+<div class="row">
+    <div class="col-md-8">
+        <form asp-action="Edit">
+            <input type="hidden" asp-for="UserId" />
+
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label asp-for="DesiredCategory"></label>
+                        <select asp-for="DesiredCategory" class="form-select" id="mainCategorySelect">
+                            <option value="">-- Chọn nhóm ngành --</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label asp-for="DesiredSpecialization"></label>
+                        <select asp-for="DesiredSpecialization" class="form-select" id="specializationSelect" disabled>
+                            <option value="">Vui lòng chọn nhóm ngành</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            @* Các trường thông tin khác của Profile *@
+
+            <div class="form-group">
+                <input type="submit" value="Lưu Thay Đổi" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success mt-3">@TempData["SuccessMessage"]</div>
+}
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async function() {
+            const provinceSelect = document.getElementById('provinceSelect');
+            const currentProvince = "@Model.DesiredProvince";
+
+            try {
+                const response = await fetch('/data/province.json');
+                const provincesData = await response.json();
+                const provinceArray = Object.values(provincesData);
+
+                // Đổ dữ liệu vào dropdown trước
+                provinceArray.sort((a,b) => a.name.localeCompare(b.name)).forEach(province => {
+                    const option = new Option(province.name_with_type, province.name_with_type);
+                    provinceSelect.add(option);
+                });
+
+                // --- BẮT ĐẦU SỬA LỖI ---
+                // Sau khi đã đổ hết dữ liệu, gán giá trị cho dropdown
+                // Đây là cách làm an toàn và đáng tin cậy nhất
+                if (currentProvince) {
+                    provinceSelect.value = currentProvince;
+                }
+                // --- KẾT THÚC SỬA LỖI ---
+
+            } catch (error) {
+                console.error("Lỗi khi tải dữ liệu tỉnh/thành:", error);
+            }
+        });
+            document.addEventListener('DOMContentLoaded', async function() {
+            // ... script cho tỉnh thành của bạn giữ nguyên ở đây ...
+
+            // --- Bắt đầu script cho chuyên ngành ---
+            const industrySelect = document.getElementById('desiredIndustrySelect');
+
+            try {
+                const response = await fetch('/data/ITname.json');
+                const positionData = await response.json();
+
+                if (Array.isArray(positionData)) {
+                    positionData.forEach(category => {
+                        const group = document.createElement('optgroup');
+                        group.label = category.name;
+                        category.children.forEach(child => {
+                            const option = new Option(child.name, child.name);
+                            if (child.name === currentIndustry) {
+                                option.selected = true;
+                            }
+                            group.appendChild(option);
+                        });
+                        industrySelect.appendChild(group);
+                    });
+                }
+            } catch (error) {
+                console.error("Lỗi khi tải dữ liệu chuyên ngành:", error);
+            }
+        });
+    </script>
+}

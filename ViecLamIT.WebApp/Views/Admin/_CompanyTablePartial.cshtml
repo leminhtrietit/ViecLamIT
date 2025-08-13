@@ -1,0 +1,51 @@
+﻿@model IEnumerable<ViecLamIT.WebApp.ViewModels.CompanyAdminViewModel>
+
+<div class="table-responsive mt-3">
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>Tên Công ty</th>
+                <th>Lĩnh vực</th>
+                <th>Tin đã duyệt</th>
+                <th>Lượt ứng tuyển</th>
+                <th>Trạng thái</th>
+                <th>Hành động</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td><strong>@item.Name</strong></td>
+                    <td>@item.ApprovedJobsCount</td>
+                    <td>@item.TotalApplicationsCount</td>
+                    <td>
+                        @if (item.IsVerified)
+                        {
+                            <span class="badge bg-success">Đã xác thực</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-warning text-dark">Chờ xác thực</span>
+                        }
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-primary btn-sm view-details-btn"
+                                data-bs-toggle="modal" data-bs-target="#companyDetailModal"
+                                data-id="@item.Id">
+                            Xem chi tiết
+                        </button>
+                        @* <a asp-action="EditCompany" asp-route-id="@item.Id" class="btn btn-secondary btn-sm">Sửa</a> *@
+                        @if (!item.IsVerified)
+                        {
+                            <form asp-action="VerifyCompany" method="post" class="d-inline">
+                                <input type="hidden" name="id" value="@item.Id" />
+                                <button type="submit" class="btn btn-success btn-sm">Xác thực</button>
+                            </form>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

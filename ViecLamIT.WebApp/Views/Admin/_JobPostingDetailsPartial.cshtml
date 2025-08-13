@@ -1,0 +1,10 @@
+﻿@model ViecLamIT.Domain.Entities.JobPosting
+
+<h5>@Model.Title</h5>
+<h6>Công ty: @Model.Company.Name</h6>
+<hr />
+<strong>Mô tả công việc:</strong>
+<div>@Html.Raw(Model.Description?.Replace("\n", "<br />"))</div>
+<hr />
+<strong>Yêu cầu:</strong>
+<div>@Html.Raw(Model.Requirements?.Replace("\n", "<br />"))</div>

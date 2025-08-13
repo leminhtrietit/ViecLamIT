@@ -1,0 +1,126 @@
+﻿@page
+@model LoginModel
+
+@{
+    ViewData["Title"] = "Đăng nhập";
+    Layout = "/Views/Shared/_LayoutBlank.cshtml";
+}
+
+<div class="row g-0 vh-100">
+    <!-- Cột hình ảnh bên trái -->
+    <div class="col-md-7 col-lg-8 d-none d-md-block">
+        <div class="bg-image-container">
+            <div class="overlay"></div>
+            <div class="content text-white p-5">
+                <h1 class="display-4 fw-bold">Tìm Kiếm Cơ Hội, Nắm Bắt Tương Lai</h1>
+                <p class="lead">Kết nối với các công ty hàng đầu và xây dựng sự nghiệp của bạn trong ngành IT.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cột form đăng nhập bên phải -->
+    <div class="col-md-5 col-lg-4 d-flex align-items-center justify-content-center bg-light">
+        <div class="card shadow-lg border-0 rounded-4" style="width: 24rem;">
+            <div class="card-body p-4 p-sm-5">
+                <h2 class="card-title text-center mb-4 fw-bold">Chào Mừng Trở Lại!</h2>
+                <form id="account" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3" role="alert"></div>
+
+                    <div class="form-floating mb-3">
+                        <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
+                        <label asp-for="Input.Email" class="form-label"></label>
+                        <span asp-validation-for="Input.Email" class="text-danger"></span>
+                    </div>
+
+                    @* --- BẮT ĐẦU NÂNG CẤP Ô MẬT KHẨU --- *@
+                    <div class="input-group mb-3">
+                        <div class="form-floating">
+                            <input asp-for="Input.Password" class="form-control" id="passwordInput" autocomplete="current-password" aria-required="true" placeholder="Password" />
+                            <label asp-for="Input.Password" class="form-label"></label>
+                        </div>
+                        <button class="btn btn-outline-secondary" type="button" id="togglePasswordBtn">
+                            <i class="bi bi-eye-slash" id="togglePasswordIcon"></i>
+                        </button>
+                    </div>
+                    <span asp-validation-for="Input.Password" class="text-danger"></span>
+                    @* --- KẾT THÚC NÂNG CẤP Ô MẬT KHẨU --- *@
+
+
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div class="form-check">
+                            <input class="form-check-input" asp-for="Input.RememberMe" />
+                            <label class="form-check-label" asp-for="Input.RememberMe">
+                                @Html.DisplayNameFor(m => m.Input.RememberMe)
+                            </label>
+                        </div>
+                        <div>
+                            <a id="forgot-password" asp-page="./ForgotPassword">Quên mật khẩu?</a>
+                        </div>
+                    </div>
+
+                    <div>
+                        <button id="login-submit" type="submit" class="w-100 btn btn-lg btn-primary">Đăng nhập</button>
+                    </div>
+
+                    <div class="text-center mt-4">
+                        <p class="mb-0">Chưa có tài khoản? <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Đăng ký ngay</a></p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* CSS tùy chỉnh cho trang đăng nhập *@
+<style>
+    .bg-image-container {
+        background-image: url('https://images.unsplash.com/photo-1556761175-5973dc0f32e7?q=80&w=1932&auto=format&fit=crop');
+        background-size: cover;
+        background-position: center;
+        height: 100%;
+        position: relative;
+    }
+
+    .overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    .content {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        height: 100%;
+    }
+</style>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const togglePasswordBtn = document.getElementById('togglePasswordBtn');
+            const passwordInput = document.getElementById('passwordInput');
+            const passwordIcon = document.getElementById('togglePasswordIcon');
+
+            togglePasswordBtn.addEventListener('click', function () {
+                // Chuyển đổi type của input
+                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput.setAttribute('type', type);
+
+                // Chuyển đổi icon
+                if (type === 'password') {
+                    passwordIcon.classList.remove('bi-eye');
+                    passwordIcon.classList.add('bi-eye-slash');
+                } else {
+                    passwordIcon.classList.remove('bi-eye-slash');
+                    passwordIcon.classList.add('bi-eye');
+                }
+            });
+        });
+    </script>
+}

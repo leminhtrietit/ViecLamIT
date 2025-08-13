@@ -1,0 +1,96 @@
+﻿@model ViecLamIT.WebApp.ViewModels.ManageCompaniesViewModel
+
+@{
+    ViewData["Title"] = "Quản Lý Công Ty";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<!-- Nav tabs -->
+<ul class="nav nav-tabs" id="companyTabs" role="tablist">
+    <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="verified-tab" data-bs-toggle="tab" data-bs-target="#verified" type="button" role="tab">
+            Đã xác thực <span class="badge bg-success">@Model.VerifiedCompanies.Count</span>
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="pending-tab" data-bs-toggle="tab" data-bs-target="#pending" type="button" role="tab">
+            Chờ xác thực <span class="badge bg-warning text-dark">@Model.PendingCompanies.Count</span>
+        </button>
+    </li>
+</ul>
+
+<!-- Tab content -->
+<div class="tab-content" id="companyTabsContent">
+    <div class="tab-pane fade show active" id="verified" role="tabpanel">
+        @await Html.PartialAsync("_CompanyTablePartial", Model.VerifiedCompanies)
+    </div>
+    <div class="tab-pane fade" id="pending" role="tabpanel">
+        @await Html.PartialAsync("_CompanyTablePartial", Model.PendingCompanies)
+    </div>
+</div>
+
+<!-- Modal Structure (giữ nguyên) -->
+<div class="modal fade" id="companyDetailModal" tabindex="-1" aria-labelledby="companyDetailModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="companyDetailModalLabel">Thông Tin Chi Tiết Công Ty</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="modalBodyContent">
+                <!-- Nội dung sẽ được tải vào đây -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* --- BẮT ĐẦU KHỐI SCRIPT MỚI --- *@
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Lấy đối tượng Modal của Bootstrap
+            var modalElement = document.getElementById('companyDetailModal');
+            var companyModal = new bootstrap.Modal(modalElement);
+            var modalBody = document.getElementById('modalBodyContent');
+
+            // Lấy tất cả các nút "Xem chi tiết"
+            var viewButtons = document.querySelectorAll('.view-details-btn');
+
+            // Thêm sự kiện 'click' cho từng nút
+            viewButtons.forEach(function(button) {
+                button.addEventListener('click', function() {
+                    var companyId = this.getAttribute('data-id');
+
+                    // Hiển thị trạng thái đang tải
+                    modalBody.innerHTML = '<div class="d-flex justify-content-center"><div class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></div></div>';
+
+                    // Mở modal ngay lập tức
+                    companyModal.show();
+
+                    // Gọi server để lấy dữ liệu
+                    fetch('/Admin/GetCompanyDetails/' + companyId)
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Lỗi mạng hoặc server không phản hồi.');
+                            }
+                            return response.text();
+                        })
+                        .then(html => {
+                            // Hiển thị nội dung nhận được
+                            modalBody.innerHTML = html;
+                        })
+                        .catch(err => {
+                            // Hiển thị lỗi nếu có
+                            modalBody.innerHTML = '<p class="text-danger">Không thể tải thông tin chi tiết. Vui lòng thử lại.</p>';
+                            console.error('Lỗi khi fetch dữ liệu:', err);
+                        });
+                });
+            });
+        });
+    </script>
+}
+@* --- KẾT THÚC KHỐI SCRIPT MỚI --- *@

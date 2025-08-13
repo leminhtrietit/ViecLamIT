@@ -1,0 +1,92 @@
+﻿@model ViecLamIT.Domain.Entities.JobPosting
+
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+<div class="container mt-4">
+
+    @* --- BẮT ĐẦU LOGIC HIỂN THỊ THEO TRẠNG THÁI --- *@
+    @if (Model.Status == "Pending")
+    {
+        <div class="alert alert-warning" role="alert">
+            <h4 class="alert-heading">Tin tuyển dụng đang chờ duyệt!</h4>
+            <p>Tin này đang được quản trị viên xem xét và sẽ sớm được hiển thị sau khi phê duyệt. Cảm ơn sự kiên nhẫn của bạn.</p>
+        </div>
+    }
+    else if (Model.Status == "Rejected")
+    {
+        <div class="alert alert-danger" role="alert">
+            <h4 class="alert-heading">Tin tuyển dụng không hợp lệ!</h4>
+            <p>Tin tuyển dụng này đã bị từ chối và không còn hiệu lực.</p>
+        </div>
+    }
+    @* --- KẾT THÚC LOGIC HIỂN THỊ THEO TRẠNG THÁI --- *@
+
+
+    <div class="row">
+        <!-- Cột chính chứa thông tin việc làm -->
+        <div class="col-lg-8">
+            <div class="card border-0">
+                <div class="card-body px-0">
+                    <div class="d-flex align-items-center mb-3">
+                        <img src="@(Model.Company.LogoUrl ?? "https://via.placeholder.com/60")" alt="Company Logo" class="rounded-circle me-3" width="60" height="60">
+                        <div>
+                            <h1 class="card-title h3 mb-0">@Model.Title</h1>
+                            <h2 class="card-subtitle h5 text-muted">@Model.Company.Name</h2>
+                        </div>
+                    </div>
+                    <hr>
+
+                    <h4 class="mt-4">Mô tả công việc</h4>
+                    <p>@Html.Raw(Model.Description?.Replace("\n", "<br />"))</p>
+
+                    <h4 class="mt-4">Yêu cầu ứng viên</h4>
+                    <p>@Html.Raw(Model.Requirements?.Replace("\n", "<br />"))</p>
+
+                    <h4 class="mt-4">Phúc lợi</h4>
+                    <p>@Html.Raw(Model.Benefits?.Replace("\n", "<br />"))</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cột phụ chứa thông tin tóm tắt -->
+        <div class="col-lg-4">
+            <div class="card sticky-top" style="top: 20px;">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Thông tin chung</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong><i class="bi bi-currency-dollar"></i> Mức lương:</strong> @(Model.SalaryFrom?.ToString("N0") ?? "Thương lượng")</p>
+                    <p><strong><i class="bi bi-geo-alt-fill"></i> Địa điểm:</strong> @(Model.Company.Ward + ", " + Model.Company.Province)</p>
+                    <p><strong><i class="bi bi-calendar-event"></i> Hạn nộp:</strong> @Model.ExpiredDate.ToString("dd/MM/yyyy")</p>
+                    <p><strong><i class="bi bi-person-workspace"></i> Cấp bậc:</strong> @Model.JobLevel</p>
+                    <p><strong><i class="bi bi-clock-fill"></i> Loại hình:</strong> @Model.JobType</p>
+
+                    @* --- BẮT ĐẦU LOGIC HIỂN THỊ NÚT ỨNG TUYỂN --- *@
+                    @if (Model.Status == "Active")
+                    {
+                        <hr />
+                        <form asp-action="Apply" method="post">
+                            <input type="hidden" name="jobId" value="@Model.Id" />
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="btn btn-success w-100 btn-lg">
+                                <i class="bi bi-send-fill"></i> Ứng Tuyển Ngay
+                            </button>
+                        </form>
+
+                        @if (TempData["SuccessMessage"] != null)
+                        {
+                            <div class="alert alert-success mt-3">@TempData["SuccessMessage"]</div>
+                        }
+                        @if (TempData["ErrorMessage"] != null)
+                        {
+                            <div class="alert alert-danger mt-3">@TempData["ErrorMessage"]</div>
+                        }
+                    }
+                    @* --- KẾT THÚC LOGIC --- *@
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

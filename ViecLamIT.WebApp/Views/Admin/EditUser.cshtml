@@ -1,0 +1,46 @@
+﻿@model ViecLamIT.WebApp.ViewModels.UserEditViewModel
+
+@{
+    ViewData["Title"] = "Chỉnh Sửa Người Dùng";
+}
+
+<h1>@ViewData["Title"]</h1>
+<h4>@Model.Email</h4>
+<hr />
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="EditUser">
+            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="Email" />
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label asp-for="FirstName" class="control-label">Họ và tên lót</label>
+                        <input asp-for="FirstName" class="form-control" />
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label asp-for="LastName" class="control-label">Tên</label>
+                        <input asp-for="LastName" class="form-control" />
+                    </div>
+                </div>
+            </div>
+            @* <div class="form-group mb-3">
+                <label asp-for="UserType" class="control-label">Loại tài khoản</label>
+                <input asp-for="UserType" class="form-control" />
+            </div> *@
+            <div class="form-group mb-3">
+                <label class="control-label">Vai trò (Roles)</label>
+                <select asp-for="Roles" class="form-control" asp-items="@Model.AllRoles" multiple></select>
+                <small class="form-text text-muted">Giữ phím Ctrl để chọn nhiều vai trò.</small>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Lưu" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+<div>
+    <a asp-action="ManageUsers">Quay lại danh sách</a>
+</div>

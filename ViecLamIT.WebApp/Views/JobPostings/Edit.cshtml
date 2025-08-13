@@ -1,0 +1,50 @@
+﻿@model ViecLamIT.WebApp.ViewModels.JobPostingEditViewModel
+
+@{
+    ViewData["Title"] = "Chỉnh Sửa Tin Tuyển Dụng";
+}
+
+<h1>@ViewData["Title"]</h1>
+<hr />
+<div class="row">
+    <div class="col-md-8">
+        <form asp-action="Edit" method="post">
+            <input type="hidden" asp-for="Id" />
+            <div asp-validation-summary="All" class="text-danger"></div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Title"></label>
+                <input asp-for="Title" class="form-control" />
+            </div>
+            <div class="form-group mb-3">
+                <label asp-for="Description"></label>
+                <textarea asp-for="Description" class="form-control" rows="5"></textarea>
+            </div>
+            <div class="form-group mb-3">
+                <label asp-for="Requirements"></label>
+                <textarea asp-for="Requirements" class="form-control" rows="5"></textarea>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="JobLevel"></label>
+                <input asp-for="JobLevel" class="form-control" />
+            </div>
+            <div class="form-group mb-3">
+                <label asp-for="ExpiredDate"></label>
+                <input asp-for="ExpiredDate" class="form-control" />
+            </div>
+            <div class="form-group mb-3">
+                <label asp-for="Status" class="control-label"></label>
+                <select asp-for="Status" class="form-select">
+                    <option value="Active">Đang hiển thị</option>
+                    <option value="Paused">Tạm ẩn</option>
+                </select>
+                <span asp-validation-for="Status" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Lưu" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>

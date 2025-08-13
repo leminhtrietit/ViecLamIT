@@ -1,0 +1,48 @@
+﻿@model ViecLamIT.Domain.Entities.Profile
+
+@{
+    ViewData["Title"] = "Hồ sơ của " + (Model.User.FirstName + " " + Model.User.LastName);
+}
+
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header bg-light">
+            <h1 class="h3">@(Model.User.FirstName + " " + Model.User.LastName)</h1>
+            <p class="text-muted">
+                <i class="bi bi-envelope-fill"></i> @Model.User.Email
+                |
+                <i class="bi bi-telephone-fill"></i> @(Model.User.PhoneNumber ?? "Chưa cập nhật")
+            </p>
+        </div>
+        <div class="card-body">
+            <h4 class="mt-4">Tiêu đề tin</h4>
+            <hr>
+            <div class="row mb-3">
+
+                <div class="col-md-4">
+                    <strong>Mức lương mong muốn:</strong><br />
+                    <span>@(Model.DesiredSalary?.ToString("N0") ?? "Thương lượng") VND</span>
+                </div>
+                <div class="col-md-4">
+                    <strong>Địa điểm mong muốn:</strong><br />
+                    <span>@(Model.DesiredProvince ?? "Linh hoạt")</span>
+                </div>
+            </div>
+            <hr>
+            <h4 class="mt-4">Kinh nghiệm làm việc</h4>
+            <p>@Html.Raw(Model.WorkExperience?.Replace("\n", "<br />"))</p>
+            <hr>
+
+            <h4 class="mt-4">Học vấn</h4>
+            <p>@Html.Raw(Model.Education?.Replace("\n", "<br />"))</p>
+            <hr>
+
+            <h4 class="mt-4">Kỹ năng</h4>
+            <p>@Html.Raw(Model.Skills?.Replace("\n", "<br />"))</p>
+            <hr>
+
+            <h4 class="mt-4">Chứng chỉ</h4>
+            <p>@Html.Raw(Model.Certifications?.Replace("\n", "<br />"))</p>
+        </div>
+    </div>
+</div>

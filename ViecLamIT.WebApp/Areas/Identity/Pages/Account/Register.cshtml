@@ -1,0 +1,109 @@
+﻿@page
+@model RegisterModel
+@{
+    ViewData["Title"] = "Đăng ký";
+    Layout = "/Views/Shared/_LayoutBlank.cshtml";
+}
+
+<div class="row g-0 vh-100">
+    <!-- Cột hình ảnh bên trái -->
+    <div class="col-md-7 col-lg-8 d-none d-md-block">
+        <div class="bg-image-container">
+            <div class="overlay"></div>
+            <div class="content text-white p-5">
+                <h1 class="display-4 fw-bold">Tham Gia Cộng Đồng IT Lớn Nhất</h1>
+                <p class="lead">Tạo tài khoản để bắt đầu hành trình tìm kiếm công việc mơ ước của bạn ngay hôm nay.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cột form đăng ký bên phải -->
+    <div class="col-md-5 col-lg-4 d-flex align-items-center justify-content-center bg-light">
+        <div class="card shadow-lg border-0 rounded-4" style="width: 24rem;">
+            <div class="card-body p-4 p-sm-5">
+                <h2 class="card-title text-center mb-4 fw-bold">Tạo Tài Khoản</h2>
+                <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-floating mb-3">
+                                <input asp-for="Input.FirstName" class="form-control" placeholder="Họ và tên lót" />
+                                <label asp-for="Input.FirstName"></label>
+                                <span asp-validation-for="Input.FirstName" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating mb-3">
+                                <input asp-for="Input.LastName" class="form-control" placeholder="Tên" />
+                                <label asp-for="Input.LastName"></label>
+                                <span asp-validation-for="Input.LastName" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-floating mb-3">
+                        <input asp-for="Input.Email" class="form-control" autocomplete="username" placeholder="name@example.com" />
+                        <label asp-for="Input.Email"></label>
+                        <span asp-validation-for="Input.Email" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-floating mb-3">
+                        <select asp-for="Input.UserType" class="form-select">
+                            <option value="JobSeeker" selected>Tôi là Ứng viên</option>
+                            <option value="Employer">Tôi là Nhà tuyển dụng</option>
+                        </select>
+                        <label asp-for="Input.UserType">Bạn là?</label>
+                    </div>
+
+                    <div class="form-floating mb-3">
+                        <input asp-for="Input.Password" class="form-control" autocomplete="new-password" placeholder="Mật khẩu" />
+                        <label asp-for="Input.Password"></label>
+                        <span asp-validation-for="Input.Password" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-floating mb-3">
+                        <input asp-for="Input.ConfirmPassword" class="form-control" autocomplete="new-password" placeholder="Xác nhận mật khẩu" />
+                        <label asp-for="Input.ConfirmPassword"></label>
+                        <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+                    </div>
+
+                    <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Đăng ký</button>
+
+                    <div class="text-center mt-4">
+                        <p class="mb-0">Đã có tài khoản? <a asp-page="./Login" asp-route-returnUrl="@Model.ReturnUrl">Đăng nhập</a></p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* CSS tùy chỉnh cho trang đăng ký *@
+<style>
+    .bg-image-container {
+        background-image: url('https://images.unsplash.com/photo-1521737711867-e3b97375f902?q=80&w=1974&auto=format&fit=crop');
+        background-size: cover;
+        background-position: center;
+        height: 100%;
+        position: relative;
+    }
+
+    .overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    .content {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        height: 100%;
+    }
+</style>

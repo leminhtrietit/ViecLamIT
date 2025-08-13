@@ -1,0 +1,164 @@
+﻿@model ViecLamIT.WebApp.ViewModels.JobPostingCreateViewModel
+
+@{
+    ViewData["Title"] = "Đăng Tin Tuyển Dụng Mới";
+}
+
+<h1>@ViewData["Title"]</h1>
+<hr />
+<div class="row">
+    <div class="col-md-8">
+        <form asp-action="Create">
+            <div asp-validation-summary="All" class="text-danger"></div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Title" class="control-label"></label>
+                <input asp-for="Title" class="form-control" placeholder="Ví dụ: Lập trình viên .NET (Fresher, Remote)" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label asp-for="Category" class="control-label"></label>
+                        <select asp-for="Category" class="form-select" id="mainCategorySelect">
+                            <option value="">-- Chọn nhóm ngành --</option>
+                        </select>
+                        <span asp-validation-for="Category" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label asp-for="Specialization" class="control-label"></label>
+                        <select asp-for="Specialization" class="form-select" id="specializationSelect" disabled>
+                            <option value="">Vui lòng chọn nhóm ngành</option>
+                        </select>
+                        <span asp-validation-for="Specialization" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Description" class="control-label"></label>
+                <textarea asp-for="Description" class="form-control" rows="5"></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Requirements" class="control-label"></label>
+                <textarea asp-for="Requirements" class="form-control" rows="5"></textarea>
+                <span asp-validation-for="Requirements" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Benefits" class="control-label"></label>
+                <textarea asp-for="Benefits" class="form-control" rows="3"></textarea>
+                <span asp-validation-for="Benefits" class="text-danger"></span>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label asp-for="SalaryFrom" class="control-label"></label>
+                        <input asp-for="SalaryFrom" type="number" class="form-control" placeholder="Ví dụ: 15000000" />
+                        <span asp-validation-for="SalaryFrom" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label asp-for="SalaryTo" class="control-label"></label>
+                        <input asp-for="SalaryTo" type="number" class="form-control" placeholder="Ví dụ: 30000000" />
+                        <span asp-validation-for="SalaryTo" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label asp-for="JobLevel" class="control-label"></label>
+                        <select asp-for="JobLevel" class="form-select">
+                            <option value="">-- Chọn cấp bậc --</option>
+                            <option value="Intern">Intern</option>
+                            <option value="Fresher">Fresher</option>
+                            <option value="Junior">Junior</option>
+                            <option value="Middle">Middle</option>
+                            <option value="Senior">Senior</option>
+                            <option value="Manager">Manager</option>
+                        </select>
+                        <span asp-validation-for="JobLevel" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label asp-for="JobType" class="control-label"></label>
+                        <select asp-for="JobType" class="form-select">
+                            <option value="">-- Chọn loại hình --</option>
+                            <option value="Toàn thời gian">Toàn thời gian</option>
+                            <option value="Bán thời gian">Bán thời gian</option>
+                            <option value="Hợp đồng">Hợp đồng</option>
+                            <option value="Thực tập">Thực tập</option>
+                        </select>
+                        <span asp-validation-for="JobType" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="ExpiredDate" class="control-label"></label>
+                <input asp-for="ExpiredDate" type="date" class="form-control" />
+                <span asp-validation-for="ExpiredDate" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Đăng Tin" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async function() {
+            const mainCategorySelect = document.getElementById('mainCategorySelect');
+            const specializationSelect = document.getElementById('specializationSelect');
+            let positionData = [];
+
+            async function loadPositionData() {
+                try {
+                    const response = await fetch('/data/ITname.json');
+                    if (!response.ok) throw new Error('Lỗi tải file JSON');
+                    positionData = await response.json();
+
+                    mainCategorySelect.innerHTML = '<option value="">-- Chọn nhóm ngành --</option>';
+                    positionData.forEach(category => {
+                        mainCategorySelect.add(new Option(category.name, category.name));
+                    });
+                } catch (error) { console.error("Lỗi:", error); }
+            }
+
+            mainCategorySelect.addEventListener('change', function() {
+                const selectedCategoryName = this.value;
+                specializationSelect.innerHTML = '<option value="">-- Chọn chuyên ngành --</option>';
+                specializationSelect.disabled = true;
+
+                if (selectedCategoryName) {
+                    const selectedCategory = positionData.find(cat => cat.name === selectedCategoryName);
+                    if (selectedCategory && selectedCategory.children) {
+                        selectedCategory.children.forEach(child => {
+                            specializationSelect.add(new Option(child.name, child.name));
+                        });
+                        specializationSelect.disabled = false;
+                    }
+                }
+            });
+
+            await loadPositionData();
+        });
+    </script>
+}

@@ -1,0 +1,133 @@
+﻿@model IEnumerable<ViecLamIT.Domain.Entities.JobPosting>
+@using Microsoft.AspNetCore.Identity
+@using ViecLamIT.Domain.Entities
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+@{
+    ViewData["Title"] = "Trang Chủ - Tìm Kiếm Việc Làm IT";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Tìm kiếm cơ hội, nắm bắt tương lai</h1>
+    <p>Khám phá hàng ngàn công việc IT hấp dẫn đang chờ bạn.</p>
+</div>
+
+@* --- BỘ LỌC NÂNG CAO --- *@
+<!-- BỘ LỌC NÂNG CAO -->
+<!-- BỘ LỌC NÂNG CAO -->
+<form asp-controller="Home" asp-action="Index" method="get" class="p-4 bg-light rounded mb-4 border">
+    <div class="row g-3">
+        <div class="col-lg-12">
+            <input type="text" name="searchString" class="form-control form-control-lg" placeholder="Nhập từ khóa..." value="@ViewData["CurrentFilter"]" />
+        </div>
+        <div class="col-md-3">
+            <select name="specialization" class="form-select" id="specializationSelect">
+                <option value="">Tất cả chuyên ngành</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <select name="jobLevel" class="form-select">
+                <option value="">Tất cả cấp bậc</option>
+                <option value="Intern" selected="@(ViewData["CurrentJobLevel"]?.ToString() == "Intern")">Intern</option>
+                <option value="Fresher" selected="@(ViewData["CurrentJobLevel"]?.ToString() == "Fresher")">Fresher</option>
+                <option value="Junior" selected="@(ViewData["CurrentJobLevel"]?.ToString() == "Junior")">Junior</option>
+                <option value="Middle" selected="@(ViewData["CurrentJobLevel"]?.ToString() == "Middle")">Middle</option>
+                <option value="Senior" selected="@(ViewData["CurrentJobLevel"]?.ToString() == "Senior")">Senior</option>
+                <option value="Manager" selected="@(ViewData["CurrentJobLevel"]?.ToString() == "Manager")">Manager</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <select name="province" class="form-select">
+                <option value="">Tất cả địa điểm</option>
+                @if (ViewBag.Provinces != null)
+                {
+                    foreach (var province in ViewBag.Provinces)
+                    {
+                        <option value="@province" selected="@(ViewData["CurrentProvince"]?.ToString() == province)">@province</option>
+                    }
+                }
+            </select>
+        </div>
+        <div class="col-md-3">
+            <select name="salaryMin" class="form-select">
+                <option value="">Tất cả mức lương</option>
+                <option value="10" selected="@(ViewData["CurrentSalary"] as int? == 10)">Trên 10 triệu</option>
+                <option value="20" selected="@(ViewData["CurrentSalary"] as int? == 20)">Trên 20 triệu</option>
+                <option value="30" selected="@(ViewData["CurrentSalary"] as int? == 30)">Trên 30 triệu</option>
+                <option value="50" selected="@(ViewData["CurrentSalary"] as int? == 50)">Trên 50 triệu</option>
+            </select>
+        </div>
+    </div>
+    <div class="row g-2 mt-2">
+        <div class="col-sm-6 col-lg-3 d-grid">
+            <button class="btn btn-primary" type="submit"><i class="bi bi-search"></i> Tìm kiếm</button>
+        </div>
+        <div class="col-sm-6 col-lg-3 d-grid">
+            <a asp-action="Index" class="btn btn-outline-secondary"><i class="bi bi-arrow-clockwise"></i> Xóa bộ lọc</a>
+        </div>
+        <div class="col-sm-6 col-lg-3 d-grid">
+            <a asp-action="RandomJob" class="btn btn-outline-info"><i class="bi bi-shuffle"></i> Xem ngẫu nhiên</a>
+        </div>
+        <div class="col-sm-6 col-lg-3 d-grid">
+            @if (SignInManager.IsSignedIn(User) && (await UserManager.GetUserAsync(User)).UserType == "JobSeeker")
+            {
+                <a asp-action="Index" asp-route-matchCv="true" class="btn btn-success">
+                    <i class="bi bi-person-check-fill"></i> Việc làm cho bạn
+                </a>
+            }
+        </div>
+    </div>
+</form>
+
+<hr />
+
+@* --- DANH SÁCH VIỆC LÀM (giữ nguyên) --- *@
+<div class="row">
+    @foreach (var item in Model)
+    {
+        <div class="col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">@item.Title</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">@item.Company.Name</h6>
+                    <p class="card-text">
+                        <strong><i class="bi bi-geo-alt-fill"></i> Địa điểm:</strong> @(item.Company.Ward + ", " + item.Company.Province)
+                        <br />
+                        <strong><i class="bi bi-currency-dollar"></i> Lương:</strong> @(item.SalaryFrom?.ToString("N0") ?? "Thương lượng")
+                    </p>
+                    <a asp-controller="JobPostings" asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary">Xem chi tiết</a>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+@section Scripts {
+<script>
+document.addEventListener('DOMContentLoaded', async function() {
+const specializationSelect = document.getElementById('specializationSelect');
+const currentSpecialization = "@ViewData["CurrentSpecialization"]";        try {
+            const response = await fetch('/data/ITname.json');
+            const positionData = await response.json();
+
+            if (Array.isArray(positionData)) {
+                positionData.forEach(category => {
+                    const group = document.createElement('optgroup');
+                    group.label = category.name;
+                    category.children.forEach(child => {
+                        const option = new Option(child.name, child.name);
+                        if (child.name === currentSpecialization) {
+                            option.selected = true;
+                        }
+                        group.appendChild(option);
+                    });
+                    specializationSelect.appendChild(group);
+                });
+            }
+        } catch (error) {
+            console.error("Lỗi khi tải dữ liệu chuyên ngành:", error);
+        }
+    });
+
+    </script>
+}

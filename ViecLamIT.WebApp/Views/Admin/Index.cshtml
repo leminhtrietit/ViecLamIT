@@ -1,0 +1,75 @@
+﻿@model ViecLamIT.WebApp.ViewModels.AdminDashboardViewModel
+
+@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<style>
+    /* Thêm một chút CSS để các thẻ link trông đẹp hơn */
+    .dashboard-card-link {
+        text-decoration: none; /* Bỏ gạch chân của link */
+        color: inherit; /* Giữ màu chữ gốc của thẻ card */
+    }
+
+        .dashboard-card-link .card:hover {
+            transform: translateY(-5px); /* Hiệu ứng nhấc lên khi di chuột qua */
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+            transition: all 0.2s ease-in-out;
+        }
+</style>
+
+<h1>@ViewData["Title"]</h1>
+<p>Tổng quan hệ thống</p>
+<hr />
+
+<div class="row">
+    @* Thẻ Quản lý Người dùng *@
+    <div class="col-md-3">
+        <a asp-action="ManageUsers" class="dashboard-card-link">
+            <div class="card text-white bg-primary mb-3">
+                <div class="card-header  text-center">Tổng số người dùng</div>
+                <div class="card-body">
+                    <h5 class="card-title display-4 text-center">@Model.TotalUsers</h5>
+                </div>
+            </div>
+        </a>
+    </div>
+
+    @* Thẻ Quản lý Công ty *@
+    <div class="col-md-3">
+        <a asp-action="ManageCompanies" class="dashboard-card-link">
+            <div class="card text-white bg-success mb-3">
+                <div class="card-header text-center">Tổng số công ty</div>
+                <div class="card-body">
+                    <h5 class="card-title display-4 text-center">@Model.TotalCompanies</h5>
+                </div>
+            </div>
+        </a>
+    </div>
+
+    @* Thẻ Quản lý Tin tuyển dụng *@
+    <div class="col-md-3">
+        <a asp-action="ManageJobPostings" class="dashboard-card-link">
+            <div class="card text-white bg-info mb-3">
+                <div class="card-header text-center">Tổng số tin tuyển dụng</div>
+                <div class="card-body">
+                    <h5 class="card-title display-4 text-center">@Model.TotalJobPostings</h5>
+                </div>
+            </div>
+        </a>
+    </div>
+
+    @* Thẻ Thống kê Lượt ứng tuyển (tạm thời cũng link đến trang quản lý tin) *@
+    <div class="col-md-3">
+        
+            <div class="card text-white bg-warning mb-3">
+            <div class="card-header text-center">Tổng số lượt ứng tuyển</div>
+                <div class="card-body">
+                    <h5 class="card-title display-4 text-center">@Model.TotalApplications</h5>
+                </div>
+            </div>
+       
+    </div>
+</div>
+
+@* Chúng ta đã xóa hoàn toàn khối div chứa danh sách link cũ *@

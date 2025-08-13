@@ -1,0 +1,236 @@
+﻿@model ViecLamIT.WebApp.ViewModels.CompanyCreateViewModel
+
+@{
+    ViewData["Title"] = "Tạo Hồ Sơ Công Ty";
+}
+
+<!-- Thêm CSS cho thư viện Choices.js -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
+
+<style>
+    .btn-check:checked + .btn-outline-primary {
+        background-color: #0d6efd;
+        color: white;
+    }
+</style>
+
+<h1>@ViewData["Title"]</h1>
+<hr />
+
+<form asp-action="Create">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    @* --- BẮT ĐẦU BỔ SUNG LẠI CÁC TRƯỜNG THÔNG TIN --- *@
+    <div class="row align-items-end">
+        <div class="col-md-3">
+            <div class="form-group mb-3">
+                <label class="form-label">Loại hình</label>
+                <div>
+                    <input type="radio" class="btn-check" name="BusinessType" id="businessTypeEnterprise" value="Doanh nghiệp" checked>
+                    <label class="btn btn-outline-primary" for="businessTypeEnterprise">Doanh nghiệp</label>
+
+                    <input type="radio" class="btn-check" name="BusinessType" id="businessTypeHousehold" value="Hộ kinh doanh">
+                    <label class="btn btn-outline-primary" for="businessTypeHousehold">Hộ kinh doanh</label>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group mb-3">
+                <label asp-for="TaxCode" class="control-label"></label>
+                <input asp-for="TaxCode" class="form-control" />
+                <span asp-validation-for="TaxCode" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-md-5">
+            <div class="form-group mb-3">
+                <label asp-for="Name" class="control-label">Tên công ty</label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group mb-3">
+                <label asp-for="Website" class="control-label"></label>
+                <input asp-for="Website" class="form-control" />
+                <span asp-validation-for="Website" class="text-danger"></span>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group mb-3">
+                <label asp-for="CompanySize" class="control-label"></label>
+                <input asp-for="CompanySize" class="form-control" placeholder="Ví dụ: 10-24 nhân viên" />
+                <span asp-validation-for="CompanySize" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group mb-3">
+                <label asp-for="LogoUrl" class="control-label">Link Logo công ty</label>
+                <input asp-for="LogoUrl" class="form-control" placeholder="https://example.com/logo.png" />
+                <span asp-validation-for="LogoUrl" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+    @* --- KẾT THÚC BỔ SUNG --- *@
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group mb-3">
+                <label asp-for="Province" class="control-label"></label>
+                <select asp-for="Province" class="form-select" id="provinceSelect">
+                    <option value="">-- Chọn Tỉnh/Thành --</option>
+                </select>
+                <span asp-validation-for="Province" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group mb-3">
+                <label asp-for="Ward" class="control-label"></label>
+                <select asp-for="Ward" class="form-select" id="wardSelect" disabled>
+                    <option value="">Vui lòng chọn Tỉnh/Thành</option>
+                </select>
+                <span asp-validation-for="Ward" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+    <div class="form-group mb-3">
+        <label asp-for="StreetAddress" class="control-label"></label>
+        <input asp-for="StreetAddress" class="form-control" id="streetAddressInput" placeholder="Số nhà, tên đường..." />
+        <span asp-validation-for="StreetAddress" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <span class="form-label">Địa chỉ:</span>
+        <em id="fullAddressPreview" class="text-muted ms-2">Vui lòng điền đầy đủ thông tin trên...</em>
+    </div>
+
+    <div class="form-group mb-3">
+        <label asp-for="Description" class="control-label"></label>
+        <textarea asp-for="Description" class="form-control" rows="5"></textarea>
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <input type="submit" value="Tạo và Gửi yêu cầu xác thực" class="btn btn-primary" />
+    </div>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <!-- Thêm JS cho thư viện Choices.js -->
+    <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+
+    <script>
+        // Toàn bộ script cho địa chỉ giữ nguyên như cũ
+        document.addEventListener('DOMContentLoaded', async function() {
+            const provinceSelect = document.getElementById('provinceSelect');
+            const wardSelect = document.getElementById('wardSelect');
+            const streetAddressInput = document.getElementById('streetAddressInput');
+            const fullAddressPreview = document.getElementById('fullAddressPreview');
+
+            const provinceChoices = new Choices(provinceSelect, { searchEnabled: true, itemSelectText: 'Nhấn để chọn', removeItemButton: true, allowHTML: true });
+            const wardChoices = new Choices(wardSelect, { searchEnabled: true, itemSelectText: 'Nhấn để chọn', removeItemButton: true, allowHTML: true });
+
+            let provinceArray = [];
+            let wardsData = {};
+            const majorCities = ["Thành phố Hồ Chí Minh", "Thành phố Hà Nội", "Thành phố Đà Nẵng", "Thành phố Cần Thơ", "Thành phố Hải Phòng"];
+
+            function updateAddressPreview() {
+                const street = streetAddressInput.value.trim();
+                const ward = wardChoices.getValue(true);
+                const province = provinceChoices.getValue(true);
+                const parts = [];
+                if (street) parts.push(street);
+                if (ward) parts.push(ward);
+                if (province) parts.push(province);
+                if (parts.length > 0) {
+                    fullAddressPreview.textContent = parts.join(', ');
+                } else {
+                    fullAddressPreview.textContent = 'Vui lòng điền đầy đủ thông tin trên...';
+                }
+            }
+
+            async function loadLocationData() {
+                try {
+                    provinceChoices.clearStore();
+                    provinceChoices.setChoices([{ value: '', label: 'Đang tải...', disabled: true }], 'value', 'label', false);
+
+                    const [provinceResponse, wardResponse] = await Promise.all([
+                        fetch('/data/province.json'),
+                        fetch('/data/ward.json')
+                    ]);
+
+                    const provincesData = await provinceResponse.json();
+                    wardsData = await wardResponse.json();
+
+                    provinceArray = Object.values(provincesData);
+
+                    const majorCityObjects = provinceArray.filter(p => majorCities.includes(p.name_with_type));
+                    const otherProvinces = provinceArray.filter(p => !majorCities.includes(p.name_with_type));
+
+                    majorCityObjects.sort((a, b) => majorCities.indexOf(a.name_with_type) - majorCities.indexOf(b.name_with_type));
+                    otherProvinces.sort((a, b) => a.name.localeCompare(b.name));
+
+                    const choices = [
+                        { value: '', label: '-- Chọn Tỉnh/Thành --', selected: true, disabled: true },
+                        {
+                            label: 'Thành phố lớn',
+                            choices: majorCityObjects.map(p => ({ value: p.name_with_type, label: p.name_with_type }))
+                        },
+                        {
+                            label: 'Tỉnh thành khác',
+                            choices: otherProvinces.map(p => ({ value: p.name_with_type, label: p.name_with_type }))
+                        }
+                    ];
+                    provinceChoices.setChoices(choices, 'value', 'label', true);
+                } catch (error) {
+                    console.error("Lỗi khi tải hoặc xử lý file JSON:", error);
+                    provinceChoices.setChoices([{ value: '', label: 'Lỗi tải dữ liệu', disabled: true }], 'value', 'label', false);
+                }
+            }
+
+            provinceSelect.addEventListener('change', function(event) {
+                const selectedProvinceName = event.detail.value;
+                const selectedProvinceObject = provinceArray.find(p => p.name_with_type === selectedProvinceName);
+
+                wardChoices.clearStore();
+                wardChoices.disable();
+                wardChoices.setChoices([{ value: '', label: 'Vui lòng chọn Tỉnh/Thành', disabled: true, selected: true }], 'value', 'label', false);
+
+                if (selectedProvinceObject) {
+                    const provinceCode = selectedProvinceObject.code;
+                    wardChoices.setChoices([{ value: '', label: 'Đang tải...', disabled: true, selected: true }], 'value', 'label', false);
+
+                    const wardArray = Object.values(wardsData);
+                    const wards = wardArray
+                        .filter(ward => ward.parent_code === provinceCode)
+                        .sort((a, b) => a.name.localeCompare(b.name));
+
+                    const wardChoicesData = wards.map(w => ({ value: w.name_with_type, label: w.name_with_type }));
+
+                    wardChoices.setChoices([
+                        { value: '', label: '-- Chọn Phường/Xã --', selected: true, disabled: true },
+                        ...wardChoicesData
+                    ], 'value', 'label', true);
+
+                    wardChoices.enable();
+                }
+                updateAddressPreview();
+            });
+
+            wardSelect.addEventListener('change', updateAddressPreview);
+            streetAddressInput.addEventListener('input', updateAddressPreview);
+
+            await loadLocationData();
+        });
+    </script>
+}

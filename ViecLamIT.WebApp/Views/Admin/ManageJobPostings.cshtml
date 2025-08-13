@@ -1,0 +1,137 @@
+﻿@model ViecLamIT.WebApp.ViewModels.ManageJobPostingsViewModel
+
+@{
+    ViewData["Title"] = "Quản Lý Tin Tuyển Dụng";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<!-- Nav tabs -->
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+    <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="pending-tab" data-bs-toggle="tab" data-bs-target="#pending" type="button" role="tab" aria-controls="pending" aria-selected="true">
+            Chờ duyệt <span class="badge bg-warning text-dark">@Model.PendingJobs.Count</span>
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="approved-tab" data-bs-toggle="tab" data-bs-target="#approved" type="button" role="tab" aria-controls="approved" aria-selected="false">
+            Đã duyệt <span class="badge bg-success">@Model.ApprovedJobs.Count</span>
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="rejected-tab" data-bs-toggle="tab" data-bs-target="#rejected" type="button" role="tab" aria-controls="rejected" aria-selected="false">
+            Đã từ chối <span class="badge bg-danger">@Model.RejectedJobs.Count</span>
+        </button>
+    </li>
+</ul>
+
+<!-- Tab content -->
+<div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="pending" role="tabpanel" aria-labelledby="pending-tab">
+        @await Html.PartialAsync("_JobPostingTablePartial", Model.PendingJobs)
+    </div>
+    <div class="tab-pane fade" id="approved" role="tabpanel" aria-labelledby="approved-tab">
+        @await Html.PartialAsync("_JobPostingTablePartial", Model.ApprovedJobs, new ViewDataDictionary(ViewData) { { "ShowActions", false } })
+    </div>
+    <div class="tab-pane fade" id="rejected" role="tabpanel" aria-labelledby="rejected-tab">
+        @* Truyền thêm một biến ViewData để báo cho PartialView biết không cần hiển thị cột Hành động *@
+        @await Html.PartialAsync("_JobPostingTablePartial", Model.RejectedJobs, new ViewDataDictionary(ViewData) { { "ShowActions", false } })
+    </div>
+
+</div>
+
+
+<!-- Modal Structure -->
+<div class="modal fade" id="jobDetailModal" tabindex="-1" aria-labelledby="jobDetailModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="jobDetailModalLabel">Chi Tiết Tin Tuyển Dụng</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="modalBodyContent">
+                <p>Đang tải...</p>
+            </div>
+            <div class="modal-footer">
+                <div id="rejectionSection" style="display: none; width: 100%;">
+                    <form id="rejectForm" asp-controller="Admin" asp-action="RejectJobPosting" method="post">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="id" id="rejectJobId" />
+                        <div class="mb-2">
+                            <label for="rejectionReason" class="form-label">Vui lòng chọn lý do từ chối:</label>
+                            <select name="rejectionReason" class="form-select">
+                                <option value="Tin đăng không phù hợp">Tin đăng không phù hợp</option>
+                                <option value="Thông tin không rõ ràng">Thông tin không rõ ràng</option>
+                                <option value="Nghi ngờ lừa đảo">Nghi ngờ lừa đảo</option>
+                                <option value="Khác">Khác</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-danger">Xác nhận từ chối</button>
+                    </form>
+                </div>
+                <div id="actionButtons">
+                    <button type="button" id="rejectBtn" class="btn btn-warning">Từ chối</button>
+                    <form id="approveForm" asp-controller="Admin" asp-action="ApproveJobPosting" method="post" class="d-inline">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="id" id="approveJobId" />
+                        <button type="submit" class="btn btn-success">Kiểm duyệt & cho hiển thị</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var jobDetailModal = document.getElementById('jobDetailModal');
+
+            jobDetailModal.addEventListener('show.bs.modal', function (event) {
+                var button = event.relatedTarget;
+                var jobId = button.getAttribute('data-id');
+                var mode = button.getAttribute('data-mode'); // Lấy chế độ: 'review' hoặc 'view-only'
+
+                var modalBody = document.getElementById('modalBodyContent');
+                var modalFooter = jobDetailModal.querySelector('.modal-footer');
+
+                // Reset modal
+                modalBody.innerHTML = '<p>Đang tải...</p>';
+
+                // Điều khiển việc hiển thị các nút hành động dựa trên chế độ
+                if (mode === 'review') {
+                    modalFooter.style.display = 'block'; // Hiển thị các nút Duyệt/Từ chối
+                } else {
+                    modalFooter.style.display = 'none'; // Ẩn các nút đi nếu chỉ xem
+                }
+
+                // Cập nhật ID cho các form
+                document.getElementById('approveJobId').value = jobId;
+                document.getElementById('rejectJobId').value = jobId;
+
+                // Tải nội dung chi tiết
+                fetch('/Admin/GetJobPostingDetails/' + jobId)
+                    .then(response => response.text())
+                    .then(html => {
+                        modalBody.innerHTML = html;
+                    })
+                    .catch(err => {
+                        modalBody.innerHTML = '<p class="text-danger">Không thể tải nội dung.</p>';
+                        console.error('Error:', err);
+                    });
+            });
+
+            // Logic của nút Từ chối giữ nguyên
+            document.getElementById('rejectBtn').addEventListener('click', function() {
+                document.getElementById('actionButtons').style.display = 'none';
+                document.getElementById('rejectionSection').style.display = 'block';
+            });
+
+            // Thêm logic để reset lại footer khi modal đóng
+            jobDetailModal.addEventListener('hidden.bs.modal', function () {
+                document.getElementById('rejectionSection').style.display = 'none';
+                document.getElementById('actionButtons').style.display = 'block';
+            });
+        });
+    </script>
+}
